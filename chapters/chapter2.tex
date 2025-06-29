@@ -1,0 +1,178 @@
+%====================================================================
+% Chapitre 2 : État de l'art
+%====================================================================
+
+\chapter{État de l'art}
+\label{chap:state-of-art}
+
+\section{Introduction}
+
+Ce chapitre présente une analyse approfondie de l'état actuel de la recherche en sécurité des firmwares IoT. Nous examinons les principales approches développées pour la détection et la prévention des attaques par compromission de firmware, en mettant l'accent sur les mécanismes de vérification d'intégrité et l'utilisation des éléments sécurisés. Cette revue de littérature permet d'identifier les lacunes existantes et de positionner notre contribution dans le contexte scientifique actuel.
+
+\section{Sécurité des firmwares dans les systèmes IoT}
+
+\subsection{Défis de la sécurité des firmwares IoT}
+
+Les firmwares des dispositifs IoT présentent des caractéristiques uniques qui compliquent leur sécurisation. Contrairement aux systèmes traditionnels, les dispositifs IoT fonctionnent avec des contraintes strictes en termes de ressources computationnelles, de mémoire et d'énergie. Ces limitations ont un impact direct sur les mécanismes de sécurité implémentables.
+
+\textbf{Contraintes de ressources :} Les études récentes montrent que les microcontrôleurs utilisés dans les dispositifs IoT grand public disposent généralement de 32 à 512 KB de mémoire RAM et de 128 KB à 4 MB de mémoire flash \cite{Khan2024EfficiencySecurity}. Ces contraintes limitent significativement la complexité des algorithmes cryptographiques implémentables.
+
+\textbf{Hétérogénéité des plateformes :} L'écosystème IoT se caractérise par une grande diversité de processeurs (ARM Cortex-M, RISC-V, x86), de systèmes d'exploitation (FreeRTOS, Contiki, Linux embarqué), et d'architectures matérielles. Cette hétérogénéité complique le développement de solutions de sécurité universelles.
+
+\textbf{Cycle de vie prolongé :} Les dispositifs IoT sont généralement déployés pour des durées de 10 à 20 ans, ce qui nécessite des mécanismes de mise à jour sécurisée et de maintenance à long terme. Les travaux de Zhang et al. \cite{Zhang2024RobustBlockchain} soulignent l'importance de solutions de mise à jour distribuées pour garantir la sécurité sur le long terme.
+
+\subsection{Taxonomie des attaques sur les firmwares IoT}
+
+Les attaques ciblant les firmwares IoT peuvent être classées selon plusieurs dimensions : le vecteur d'attaque, le niveau d'accès requis, et l'objectif de l'attaquant.
+
+\textbf{Attaques par injection de code malveillant :} Ces attaques exploitent les vulnérabilités des mécanismes de mise à jour pour injecter du code malveillant dans le firmware. L'étude de Gonzalez-Manzano et al. \cite{Gonzalez2024ExploringShifting} révèle une sophistication croissante de ces attaques, avec l'adaptation de malwares initialement conçus pour d'autres plateformes.
+
+\textbf{Attaques par manipulation du flot de contrôle :} Les attaques ROP (Return-Oriented Programming) exploitent les vulnérabilités de débordement de tampon pour détourner le flot d'exécution. Christou et al. \cite{Christou2024DAEDALUS} proposent DAEDALUS, un framework de défense utilisant la diversité logicielle pour contrer ces attaques.
+
+\textbf{Attaques par compromission de composants tiers :} L'analyse de Feng et al. \cite{Feng2022OneBadApple} révèle que 89\% des firmwares IoT intègrent des composants tiers vulnérables, créant des opportunités d'attaque pour les cybercriminels.
+
+\section{Mécanismes de vérification d'intégrité}
+
+\subsection{Approches cryptographiques traditionnelles}
+
+Les mécanismes de vérification d'intégrité reposent traditionnellement sur des fonctions de hachage cryptographiques et des signatures numériques. Cependant, l'application directe de ces techniques aux environnements IoT pose des défis significatifs.
+
+\textbf{Fonctions de hachage :} Les fonctions de hachage comme SHA-256 sont largement utilisées pour vérifier l'intégrité des firmwares. Cependant, leur utilisation dans des environnements contraints nécessite des optimisations spécifiques. L'étude de Khan et al. \cite{Khan2024EfficiencySecurity} compare les performances de différents algorithmes de hachage sur des microcontrôleurs ARM Cortex-M.
+
+\textbf{Signatures numériques :} Les signatures basées sur RSA ou ECDSA offrent une vérification d'authenticité robuste mais introduisent un overhead computationnel significatif. Les travaux de Bindel et al. \cite{Bindel2024MUMHors} proposent MUM-HORS, un schéma de signature basé sur des fonctions de hachage offrant des performances supérieures pour les applications IoT.
+
+\subsection{Cryptographie légère}
+
+Face aux contraintes des dispositifs IoT, la cryptographie légère émerge comme une solution prometteuse. Ces algorithmes sont spécifiquement conçus pour fonctionner efficacement sur des dispositifs à ressources limitées.
+
+\textbf{Algorithmes de chiffrement légers :} Les algorithmes comme SPECK, SIMON, et ASCON sont optimisés pour les environnements contraints. L'étude comparative de Salam et al. \cite{Salam2024SurveyLightweight} analyse les performances de ces algorithmes sur différentes plateformes IoT.
+
+\textbf{Fonctions de hachage légères :} Des fonctions comme BLAKE2s et Keccak offrent un bon compromis entre sécurité et performance. Leur utilisation dans les mécanismes de vérification d'intégrité permet de réduire significativement l'overhead computationnel.
+
+\section{Cryptographie post-quantique pour l'IoT}
+
+\subsection{Transition vers la sécurité post-quantique}
+
+L'émergence de l'informatique quantique représente une menace significative pour les algorithmes cryptographiques actuels. Les dispositifs IoT, avec leur cycle de vie prolongé, sont particulièrement concernés par cette transition.
+
+\textbf{Algorithmes post-quantiques légers :} Les recherches récentes se concentrent sur le développement d'algorithmes post-quantiques adaptés aux contraintes IoT. Rudraksh, proposé par Deshpande et al. \cite{Deshpande2024Rudraksh}, offre un mécanisme d'encapsulation de clés post-quantique avec une efficacité énergétique optimisée.
+
+\textbf{Implémentations optimisées :} L'étude de Sarkar et al. \cite{Sarkar2024AsconAutomotive} démontre l'implémentation réussie d'ASCON dans des systèmes embarqués automobiles, offrant une sécurité post-quantique avec un overhead minimal.
+
+\subsection{Défis de l'implémentation post-quantique}
+
+\textbf{Taille des clés et signatures :} Les algorithmes post-quantiques nécessitent généralement des clés et signatures plus importantes que leurs équivalents classiques. Cette caractéristique pose des défis particuliers pour les dispositifs IoT à mémoire limitée.
+
+\textbf{Performance computationnelle :} Malgré les optimisations, les algorithmes post-quantiques introduisent généralement un overhead computationnel supérieur aux algorithmes classiques. L'étude de Farahmand et al. \cite{Farahmand2024HardwareSoftware} explore les approches de co-conception matérielle/logicielle pour atténuer ces limitations.
+
+\section{Éléments sécurisés et modules de sécurité matérielle}
+
+\subsection{Architecture des éléments sécurisés}
+
+Les éléments sécurisés (\ac{SE}) et les modules de sécurité matérielle (\ac{HSM}) fournissent des environnements d'exécution sécurisés pour les opérations cryptographiques critiques. Leur intégration dans les dispositifs IoT offre des opportunités d'amélioration significative de la sécurité.
+
+\textbf{Types d'éléments sécurisés :} Les SE peuvent être implémentés sous forme de puces dédiées, d'enclaves sécurisées dans le processeur principal, ou de modules logiciels avec protection matérielle. Chaque approche présente des avantages et des inconvénients en termes de sécurité, performance et coût.
+
+\textbf{Capacités cryptographiques :} Les SE modernes intègrent des accélérateurs cryptographiques pour les opérations de chiffrement, signature, et génération de nombres aléatoires. L'étude de Kim et al. \cite{Kim2024HighSecurity} présente une implémentation HSM basée sur FPGA avec des fonctions PUF (Physically Unclonable Functions) pour l'authentification.
+
+\subsection{Trusted Platform Module (TPM) dans l'IoT}
+
+Le TPM représente une approche standardisée pour implémenter des fonctions de sécurité matérielles. Son adaptation aux environnements IoT nécessite des optimisations spécifiques.
+
+\textbf{TPM 2.0 pour l'IoT :} Les spécifications TPM 2.0 offrent des fonctionnalités adaptées aux contraintes IoT, notamment des algorithmes cryptographiques légers et des mécanismes de gestion de clés optimisés.
+
+\textbf{Attestation à distance :} Le TPM permet l'implémentation de protocoles d'attestation à distance, essentiels pour vérifier l'intégrité des dispositifs IoT déployés. Les travaux de Weber et al. \cite{Weber2024AttestationConstrained} proposent un protocole d'attestation optimisé pour les dispositifs contraints.
+
+\section{Attestation à distance et vérification d'intégrité}
+
+\subsection{Protocoles d'attestation pour l'IoT}
+
+L'attestation à distance permet de vérifier l'intégrité et l'authenticité d'un dispositif IoT sans accès physique. Cette capacité est cruciale pour la gestion sécurisée de réseaux IoT à grande échelle.
+
+\textbf{Attestation basée sur les réseaux :} L'approche Swarm-Net, proposée par Dushku et al. \cite{Dushku2024SwarmNet}, utilise des réseaux de neurones graphiques pour l'attestation de firmwares dans des essaims IoT. Cette approche atteint un taux de détection de 100\% pour les firmwares malveillants avec un overhead de communication minimal.
+
+\textbf{Attestation légère :} Les protocoles d'attestation traditionnels sont souvent trop lourds pour les dispositifs IoT. Les travaux de Abdelaziz et al. \cite{Abdelaziz2024LightweightRemote} proposent une solution basée sur des PUF et des signatures de hachage, réduisant significativement l'overhead computationnel.
+
+\textbf{Vérifiabilité publique :} Le protocole PROVE, développé par Ambrosin et al. \cite{Ambrosin2024PROVE}, permet l'attestation avec vérifiabilité publique, éliminant le besoin de matériel de clés pré-partagées entre les parties.
+
+\subsection{Défis de l'attestation IoT}
+
+\textbf{Scalabilité :} L'attestation de millions de dispositifs IoT pose des défis de scalabilité significatifs. Les approches distribuées et les protocoles d'attestation par lots sont explorés pour adresser cette problématique.
+
+\textbf{Latence et disponibilité :} Les dispositifs IoT peuvent avoir des connexions réseau intermittentes, compliquant l'implémentation de protocoles d'attestation en temps réel. Les mécanismes d'attestation différée et de cache sécurisé sont proposés comme solutions.
+
+\section{Mécanismes de détection d'intrusion}
+
+\subsection{Détection basée sur l'analyse comportementale}
+
+L'analyse comportementale permet de détecter des anomalies dans l'exécution des firmwares, même en l'absence de signatures d'attaques connues.
+
+\textbf{Apprentissage automatique pour la détection :} Les travaux de Alrawi et al. \cite{Alrawi2023MachineLearning} proposent une approche de détection de malwares basée sur l'analyse des données de flot de contrôle. Cette méthode utilise des réseaux de neurones pour classifier les exécutables comme malveillants ou bénins.
+
+\textbf{Analyse des traces d'exécution :} L'analyse des traces d'exécution permet de détecter des comportements anormaux en temps réel. Cependant, cette approche nécessite des mécanismes de collecte et d'analyse efficaces, compatibles avec les contraintes IoT.
+
+\subsection{Détection basée sur l'intégrité du code}
+
+\textbf{Vérification continue :} Contrairement aux approches de vérification au démarrage, la vérification continue permet de détecter les modifications de code pendant l'exécution. L'étude de Noor et al. \cite{Noor2025EILID} présente EILID, une architecture hybride pour la surveillance continue de l'intégrité d'exécution.
+
+\textbf{Protection du flot de contrôle :} La protection du flot de contrôle (Control Flow Integrity - CFI) vise à prévenir les attaques par détournement du flot d'exécution. Son implémentation dans les dispositifs IoT nécessite des optimisations spécifiques pour minimiser l'overhead.
+
+\section{Solutions commerciales et open source}
+
+\subsection{Solutions commerciales}
+
+Plusieurs solutions commerciales adressent la sécurité des firmwares IoT, chacune avec ses avantages et limitations.
+
+\textbf{Solutions des fabricants de puces :} Les fabricants comme ARM (TrustZone), Intel (SGX), et Qualcomm (QTEE) proposent des solutions de sécurité matérielle intégrées. Ces solutions offrent de bonnes performances mais limitent la portabilité entre différentes plateformes.
+
+\textbf{Solutions de sécurité logicielle :} Des entreprises comme Mocana, Crypto4A, et Verimatrix proposent des solutions logicielles de sécurité des firmwares. Ces solutions offrent plus de flexibilité mais peuvent introduire un overhead plus important.
+
+\subsection{Solutions open source}
+
+\textbf{Projets communautaires :} Des projets comme RIOT OS, Zephyr, et FreeRTOS intègrent des mécanismes de sécurité de base. Cependant, ces solutions nécessitent souvent des extensions pour adresser les menaces avancées.
+
+\textbf{Frameworks de sécurité :} Des frameworks comme PARSEC (Platform AbstRaction for SECurity) et Open-TEE proposent des abstractions pour les environnements d'exécution sécurisés. Leur adaptation aux contraintes IoT reste un défi.
+
+\section{Analyse comparative et limitations}
+
+\subsection{Critères d'évaluation}
+
+Pour évaluer les solutions existantes, nous utilisons plusieurs critères :
+
+\textbf{Efficacité de détection :} Capacité à détecter les attaques de compromission de firmware avec un taux de faux positifs minimal.
+
+\textbf{Performance :} Overhead computationnel et énergétique introduit par la solution de sécurité.
+
+\textbf{Portabilité :} Capacité à être déployée sur différentes plateformes IoT.
+
+\textbf{Évolutivité :} Capacité à s'adapter aux nouvelles menaces et technologies.
+
+\subsection{Limitations identifiées}
+
+L'analyse de la littérature révèle plusieurs limitations dans les approches existantes :
+
+\textbf{Overhead excessif :} De nombreuses solutions introduisent un overhead computationnel ou énergétique incompatible avec les contraintes IoT.
+
+\textbf{Couverture limitée :} Peu de solutions offrent une protection complète contre l'ensemble des vecteurs d'attaque identifiés.
+
+\textbf{Complexité d'intégration :} L'intégration des solutions de sécurité dans les dispositifs IoT existants reste complexe et coûteuse.
+
+\textbf{Manque de standardisation :} L'absence de standards communs complique l'interopérabilité entre solutions.
+
+\section{Positionnement de notre contribution}
+
+Face aux limitations identifiées, notre approche SecureIoT-VIF propose plusieurs innovations :
+
+\textbf{Architecture hybride :} Combinaison optimale de mécanismes logiciels et matériels pour maximiser l'efficacité tout en minimisant l'overhead.
+
+\textbf{Vérification temps réel :} Implémentation de mécanismes de vérification continue compatibles avec les contraintes IoT.
+
+\textbf{Exploitation des SE/HSM :} Utilisation optimale des capacités des éléments sécurisés embarqués.
+
+\textbf{Approche pratique :} Conception orientée vers le déploiement réel sur des plateformes IoT populaires.
+
+\section{Conclusion}
+
+Cette revue de littérature révèle que malgré les avancées significatives dans la sécurité des firmwares IoT, des lacunes importantes subsistent. Les solutions existantes peinent à offrir un équilibre satisfaisant entre sécurité, performance et praticité. Notre contribution vise à combler ces lacunes en proposant une approche innovante combinant vérification d'intégrité temps réel, utilisation optimale des SE/HSM, et adaptation aux contraintes spécifiques des dispositifs IoT grand public.
+
+Le chapitre suivant présente une analyse détaillée des menaces et vulnérabilités spécifiques aux firmwares IoT, fournissant les bases théoriques pour la conception de SecureIoT-VIF.

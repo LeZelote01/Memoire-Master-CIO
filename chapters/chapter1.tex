@@ -1,0 +1,162 @@
+%====================================================================
+% Chapitre 1 : Introduction - Version modifiée
+%====================================================================
+
+\chapter{Introduction}
+\label{chap:introduction}
+
+\section{Contexte général}
+
+L'Internet des Objets (\ac{IoT}) représente aujourd'hui l'une des révolutions technologiques les plus significatives de notre époque. Selon les projections de l'industrie, le nombre de dispositifs \ac{IoT} connectés devrait atteindre 75 milliards d'unités d'ici 2025, générant un marché mondial estimé à plus de 6 000 milliards de dollars \cite{Statista2024IoTMarket}. Cette croissance exponentielle s'explique par l'intégration croissante de l'intelligence artificielle, l'amélioration des réseaux de communication (5G, LoRaWAN, NB-IoT), et la miniaturisation des composants électroniques.
+
+Les dispositifs \ac{IoT} grand public englobent une vaste gamme d'appareils : objets connectés domestiques (thermostats, caméras de sécurité, assistants vocaux), dispositifs portables (montres intelligentes, trackers de fitness), appareils électroménagers intelligents, et systèmes de domotique. Ces dispositifs partagent plusieurs caractéristiques communes : ressources limitées (processeur, mémoire, stockage), contraintes énergétiques strictes, et connexion permanente aux réseaux de communication.
+
+Cependant, cette prolifération s'accompagne d'une augmentation alarmante des cyberattaques ciblant spécifiquement les firmwares des dispositifs \ac{IoT}. Les recherches récentes de Nino et al. \cite{Nino2024UnveilingIoT} révèlent que 89\% des firmwares \ac{IoT} analysés présentent des vulnérabilités critiques, dont 67\% sont liées à l'absence de mécanismes de protection de l'intégrité du firmware. Les attaques par compromission de firmware permettent aux cybercriminels d'obtenir un contrôle persistant et de bas niveau des dispositifs, rendant les détections conventionnelles inefficaces.
+
+\section{Problématique de recherche}
+
+\subsection{Vulnérabilités des firmwares IoT}
+
+Les firmwares des dispositifs \ac{IoT} présentent des vulnérabilités spécifiques qui les rendent particulièrement attractifs pour les attaquants. Plusieurs études récentes ont mis en évidence l'ampleur de ces vulnérabilités :
+
+\textbf{Composants tiers vulnérables :} L'analyse de Feng et al. \cite{Feng2022OneBadApple} sur 34 136 images de firmware révèle la présence de 584 composants tiers (\ac{TPC}) associés à 128 757 vulnérabilités liées à 429 \ac{CVE}. Cette étude souligne la persistance de vulnérabilités bien connues dans les écosystèmes de firmware, créant des opportunités d'exploitation pour les attaquants.
+
+\textbf{Sophistication croissante des malwares :} Les travaux de recherche récents montrent une évolution significative dans la sophistication des malwares IoT. L'étude de González-Manzano et al. \cite{Gonzalez2024ExploringShifting} révèle une augmentation de 45\% de la complexité des malwares IoT entre 2021 et 2023, avec l'adaptation de familles de malwares initialement conçues pour Windows vers les systèmes Linux embarqués.
+
+\textbf{Attaques par manipulation du flot de contrôle :} Les attaques de type \ac{ROP} (Return-Oriented Programming) représentent une menace particulièrement critique pour les firmwares IoT. Christou et al. \cite{Christou2024DAEDALUS} démontrent comment ces attaques peuvent être déployées à grande échelle sur des botnets IoT, compromettant simultanément des milliers de dispositifs.
+
+\subsection{Limitations des solutions existantes}
+
+Les approches actuelles de sécurisation des firmwares IoT présentent plusieurs limitations majeures :
+
+\textbf{Overhead computationnel :} Les solutions de sécurité traditionnelles, conçues pour des systèmes aux ressources abondantes, introduisent un overhead computationnel et énergétique incompatible avec les contraintes des dispositifs IoT. Les mécanismes de vérification cryptographique conventionnels peuvent consommer jusqu'à 30\% des ressources disponibles sur un microcontrôleur de classe ARM Cortex-M \cite{Khan2024EfficiencySecurity}.
+
+\textbf{Absence de vérification temps réel :} La plupart des solutions existantes effectuent la vérification d'intégrité uniquement au démarrage du dispositif, laissant le firmware vulnérable aux attaques d'exécution (runtime attacks). Cette limitation est particulièrement critique pour les dispositifs IoT fonctionnant en continu.
+
+\textbf{Sous-utilisation des capacités matérielles :} Les éléments sécurisés (\ac{SE}) et les modules de sécurité matérielle (\ac{HSM}) embarqués dans de nombreux dispositifs IoT modernes restent largement sous-exploités. Ces composants offrent pourtant des capacités de sécurité avancées : génération de clés cryptographiques, calculs cryptographiques accélérés, stockage sécurisé, et résistance aux attaques physiques.
+
+\section{Objectifs de recherche}
+
+\subsection{Objectif principal}
+
+L'objectif principal de cette recherche est de concevoir, développer et valider SecureIoT-VIF (Verification Integrity Framework), un framework léger de vérification d'intégrité basé sur les \ac{SE}/\ac{HSM} embarqués pour la détection et la prévention des attaques par compromission de firmware dans les dispositifs IoT grand public. Cette recherche adopte une approche proof-of-concept centrée sur une validation approfondie du framework sur une plateforme IoT représentative (ESP32), complétée par des études de portabilité théoriques.
+
+\subsection{Objectifs spécifiques}
+
+\textbf{Objectif 1 : Analyse des menaces et vulnérabilités}
+\begin{itemize}
+    \item Réaliser une taxonomie complète des attaques par compromission de firmware dans l'écosystème IoT
+    \item Identifier les vecteurs d'attaque spécifiques aux dispositifs IoT grand public
+    \item Évaluer l'impact des vulnérabilités identifiées sur la sécurité globale des systèmes IoT
+\end{itemize}
+
+\textbf{Objectif 2 : Conception d'une architecture de sécurité hybride}
+\begin{itemize}
+    \item Développer une architecture de sécurité exploitant les capacités des \ac{SE}/\ac{HSM} embarqués
+    \item Concevoir des mécanismes de vérification d'intégrité adaptés aux contraintes des dispositifs IoT
+    \item Intégrer des protocoles d'attestation à distance légers et efficaces
+\end{itemize}
+
+\textbf{Objectif 3 : Implémentation et optimisation proof-of-concept}
+\begin{itemize}
+    \item Implémenter SecureIoT-VIF de manière approfondie sur la plateforme ESP32 représentative de l'écosystème IoT
+    \item Optimiser les algorithmes cryptographiques pour minimiser l'overhead computationnel et énergétique
+    \item Développer des mécanismes de détection d'anomalies basés sur l'analyse comportementale
+    \item Réaliser des études de portabilité théoriques vers les plateformes Arduino et Raspberry Pi
+\end{itemize}
+
+\textbf{Objectif 4 : Évaluation expérimentale approfondie}
+\begin{itemize}
+    \item Évaluer l'efficacité de détection des attaques de compromission de firmware sur plateforme ESP32
+    \item Mesurer l'impact sur les performances et la consommation énergétique avec instrumentation précise
+    \item Valider les concepts par émulation sur architectures complémentaires
+    \item Établir une base méthodologique pour l'extension vers des déploiements multi-dispositifs
+\end{itemize}
+
+\section{Contributions de la recherche}
+
+Ce travail apporte plusieurs contributions significatives au domaine de la sécurité des firmwares IoT :
+
+\textbf{Contribution théorique :} Proposition d'un modèle de sécurité hybride combinant vérification d'intégrité temps réel et attestation à distance, spécifiquement conçu pour les contraintes des dispositifs IoT grand public.
+
+\textbf{Contribution méthodologique :} 
+\begin{itemize}
+    \item Développement d'une méthodologie d'intégration des \ac{SE}/\ac{HSM} embarqués dans les mécanismes de sécurité des firmwares, maximisant l'utilisation des capacités matérielles disponibles
+    \item Proposition d'une approche d'évaluation proof-of-concept permettant une validation rigoureuse avec des ressources limitées
+\end{itemize}
+
+\textbf{Contribution technique :} Implémentation de SecureIoT-VIF, un framework pratique et déployable offrant :
+\begin{itemize}
+    \item Vérification d'intégrité en temps réel avec un overhead minimal (< 3\% sur ESP32)
+    \item Détection de 99,0\% des attaques de compromission de firmware dans l'étude pilote
+    \item Temps de vérification médian de 24ms pour des firmwares de taille typique
+    \item Architecture modulaire facilitant la portabilité vers d'autres plateformes IoT
+\end{itemize}
+
+\textbf{Contribution empirique :} Évaluation expérimentale approfondie sur ESP32 démontrant l'efficacité pratique de l'approche proposée dans 200 scénarios d'attaque représentatifs, validée par émulation sur 4 architectures complémentaires.
+
+\section{Approche méthodologique}
+
+\subsection{Justification de l'approche proof-of-concept}
+
+Cette recherche adopte délibérément une approche proof-of-concept centrée sur une validation approfondie plutôt qu'extensive. Cette stratégie méthodologique se justifie par :
+
+\textbf{Profondeur d'analyse :} Une caractérisation exhaustive des mécanismes de sécurité sur une plateforme représentative offre des insights plus précieux qu'une évaluation superficielle sur multiple dispositifs.
+
+\textbf{Reproductibilité scientifique :} La focalisation sur ESP32, plateforme largement accessible et documentée, facilite la reproduction et la validation externe des résultats.
+
+\textbf{Optimisation des ressources :} L'allocation de l'intégralité des ressources expérimentales à une implémentation optimisée permet d'atteindre des niveaux de performance qui ne seraient pas atteignables avec une approche distribuée.
+
+\textbf{Base pour extension :} L'approche établit une base méthodologique solide pour l'extension future vers des déploiements multi-dispositifs et multi-plateformes.
+
+\subsection{Méthodologie de validation}
+
+\textbf{Phase 1 - Analyse et état de l'art :} Revue systématique de la littérature, analyse des vulnérabilités existantes, et identification des lacunes dans les solutions actuelles.
+
+\textbf{Phase 2 - Conception et modélisation :} Développement du modèle de sécurité, conception de l'architecture du framework, et spécification des protocoles de sécurité optimisés pour ESP32.
+
+\textbf{Phase 3 - Implémentation approfondie :} Implémentation complète et optimisée du framework sur ESP32, développement d'outils d'évaluation spécialisés, et études de portabilité théoriques.
+
+\textbf{Phase 4 - Évaluation expérimentale intensive :} Tests de sécurité approfondis sur 30 jours, mesures de performance précises, et validation croisée par émulation sur architectures complémentaires.
+
+\section{Organisation du mémoire}
+
+Ce mémoire est organisé en sept chapitres :
+
+\textbf{Chapitre 1 - Introduction :} Présente le contexte, la problématique, les objectifs et les contributions de la recherche, avec justification de l'approche proof-of-concept.
+
+\textbf{Chapitre 2 - État de l'art :} Analyse les travaux existants en sécurité des firmwares IoT, les mécanismes de vérification d'intégrité, et l'utilisation des \ac{SE}/\ac{HSM} embarqués.
+
+\textbf{Chapitre 3 - Analyse des menaces :} Développe une taxonomie des attaques par compromission de firmware et présente un modèle de menaces spécifique aux dispositifs IoT grand public.
+
+\textbf{Chapitre 4 - Conception du framework :} Détaille l'architecture de SecureIoT-VIF, les mécanismes de sécurité proposés, et les choix de conception optimisés pour l'écosystème IoT.
+
+\textbf{Chapitre 5 - Implémentation :} Présente l'implémentation approfondie du framework sur ESP32, les optimisations réalisées, et les études de portabilité vers Arduino et Raspberry Pi.
+
+\textbf{Chapitre 6 - Évaluation et résultats :} Analyse les résultats de l'étude pilote expérimentale et présente la validation par émulation sur architectures complémentaires.
+
+\textbf{Chapitre 7 - Conclusion et perspectives :} Synthétise les contributions, discute les limitations de l'approche proof-of-concept, et propose des directions pour l'extension vers des déploiements multi-dispositifs.
+
+\section{Délimitations de l'étude}
+
+\subsection{Périmètre de l'étude pilote}
+
+Cette recherche se concentre délibérément sur :
+
+\textbf{Plateforme cible :} ESP32-S3 comme plateforme principale d'évaluation, représentative des dispositifs IoT grand public modernes.
+
+\textbf{Scope temporel :} Évaluation intensive sur 30 jours permettant une caractérisation approfondie des performances et de la robustesse.
+
+\textbf{Scénarios d'attaque :} 200 scénarios soigneusement sélectionnés pour leur représentativité, privilégiant la profondeur d'analyse sur la quantité.
+
+\subsection{Extensions futures envisagées}
+
+L'approche proof-of-concept établit les fondations pour des extensions futures :
+
+\textbf{Déploiement multi-dispositifs :} Extension vers des testbeds comprenant 10, 50, puis 150+ dispositifs pour validation de la scalabilité.
+
+\textbf{Hétérogénéité des plateformes :} Implémentation effective sur Arduino et Raspberry Pi basée sur les études de portabilité réalisées.
+
+\textbf{Environnements réels :} Déploiement dans des environnements de production pour validation écologique.
+
+Cette approche méthodologique assure une contribution scientifique solide tout en établissant une roadmap claire pour l'extension des travaux vers des déploiements à plus grande échelle.

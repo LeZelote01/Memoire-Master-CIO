@@ -1,0 +1,187 @@
+%====================================================================
+% Mémoire de Master - Détection et prévention des attaques par compromission 
+% de firmware dans les dispositifs IoT grand public
+%====================================================================
+
+\documentclass[12pt,a4paper,twoside]{report}
+
+% Packages essentiels
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{appendix}
+\usepackage{acronym}
+\usepackage{nomencl}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tocloft}
+
+% Configuration de la page
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm,
+    bindingoffset=0.5cm
+}
+
+% Configuration des en-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
+
+% Configuration des liens hypertexte
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=red,
+    pdftitle={Détection et prévention des attaques par compromission de firmware dans les dispositifs IoT},
+    pdfauthor={Nom de l'étudiant},
+    pdfsubject={Mémoire de Master},
+    pdfkeywords={IoT, Firmware, Sécurité, HSM, Secure Element}
+}
+
+% Configuration des couleurs pour le code
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Configuration des listings
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Espacement
+\onehalfspacing
+
+% Configuration des titres
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+% Variables pour la page de titre
+\newcommand{\universite}{Université [Nom de votre université]}
+\newcommand{\faculte}{Faculté [Nom de votre faculté]}
+\newcommand{\departement}{Département [Nom de votre département]}
+\newcommand{\titre}{Détection et prévention des attaques par compromission de firmware dans les dispositifs IoT grand public : Conception d'un Framework léger de vérification d'intégrité basé sur SE/HSM embarqué}
+\newcommand{\auteur}{[Votre nom]}
+\newcommand{\directeur}{[Nom du directeur]}
+\newcommand{\codirecteur}{[Nom du co-directeur]}
+\newcommand{\annee}{2025}
+
+% Commandes pour les acronymes
+\newcommand{\iot}{IoT}
+\newcommand{\hsm}{HSM}
+\newcommand{\se}{SE}
+\newcommand{\vif}{VIF}
+
+\begin{document}
+
+% Pages préliminaires
+\frontmatter
+
+% Page de titre
+\input{chapters/titlepage}
+
+% Page blanche
+\cleardoublepage
+
+% Dédicace
+\input{chapters/dedication}
+
+% Remerciements
+\input{chapters/acknowledgments}
+
+% Résumé
+\input{chapters/abstract}
+
+% Table des matières
+\tableofcontents
+
+% Liste des figures
+\listoffigures
+
+% Liste des tableaux
+\listoftables
+
+% Liste des algorithmes
+\listofalgorithms
+
+% Liste des acronymes
+\input{chapters/acronyms}
+
+% Corps du document
+\mainmatter
+
+% Chapitre 1 : Introduction
+\input{chapters/chapter1}
+
+% Chapitre 2 : État de l'art
+\input{chapters/chapter2}
+
+% Chapitre 3 : Analyse des menaces
+\input{chapters/chapter3}
+
+% Chapitre 4 : Conception du framework
+\input{chapters/chapter4}
+
+% Chapitre 5 : Implémentation
+\input{chapters/chapter5}
+
+% Chapitre 6 : Évaluation et résultats
+\input{chapters/chapter6}
+
+% Chapitre 7 : Conclusion et perspectives
+\input{chapters/chapter7}
+
+% Appendices
+\appendix
+\input{chapters/appendices}
+
+% Bibliographie
+\input{chapters/bibliography}
+\bibliographystyle{ieeetr}
+\bibliography{bibliography/references}
+
+\end{document}

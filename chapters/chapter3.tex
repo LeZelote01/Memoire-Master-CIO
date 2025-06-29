@@ -1,0 +1,313 @@
+%====================================================================
+% Chapitre 3 : Analyse des menaces et modélisation des attaques
+%====================================================================
+
+\chapter{Analyse des menaces et modélisation des attaques}
+\label{chap:threat-analysis}
+
+\section{Introduction}
+
+Ce chapitre présente une analyse approfondie des menaces ciblant les firmwares des dispositifs IoT grand public. Nous développons une taxonomie complète des attaques par compromission de firmware, analysons les vecteurs d'attaque spécifiques, et proposons un modèle de menaces adapté aux contraintes des environnements IoT. Cette analyse constitue la base théorique pour la conception de SecureIoT-VIF et permet d'identifier les exigences de sécurité prioritaires.
+
+\section{Taxonomie des attaques sur les firmwares IoT}
+
+\subsection{Classification par vecteur d'attaque}
+
+Les attaques par compromission de firmware peuvent être classées selon leur vecteur d'attaque principal, reflétant les différentes surfaces d'attaque disponibles aux cybercriminels.
+
+\subsubsection{Attaques par le réseau}
+
+\textbf{Exploitation de vulnérabilités de protocoles :} Les dispositifs IoT utilisent diverses protocoles de communication (HTTP, MQTT, CoAP, ZigBee) présentant des vulnérabilités exploitables. L'analyse de Palo Alto Networks \cite{PaloAlto2023MiraiVariant} révèle que les variants récents de Mirai exploitent des vulnérabilités comme CVE-2019-12725 (Zeroshell RCE) et CVE-2023-1389 (TP-Link Command Injection) pour compromettre les firmwares.
+
+\textbf{Attaques par déni de service permanent :} BrickerBot représente une catégorie particulière d'attaques visant à rendre les dispositifs IoT définitivement inutilisables. Trend Micro \cite{TrendMicro2024BrickerBot} documente comment cette famille de malwares exécute des commandes destructrices corrompant le stockage et les paramètres kernel, causant des dommages permanents au firmware.
+
+\textbf{Exploitation de services exposés :} Les services Telnet, SSH, et HTTP exposés avec des identifiants par défaut constituent des vecteurs d'attaque privilégiés. L'étude de Radware \cite{Radware2024BrickerBot} montre que 78\% des dispositifs IoT compromis utilisaient encore leurs identifiants par défaut.
+
+\subsubsection{Attaques par injection de code malveillant}
+
+\textbf{Compromission de la chaîne d'approvisionnement :} Les attaques ciblant les composants tiers intégrés dans les firmwares représentent une menace croissante. L'analyse de Feng et al. \cite{Feng2022OneBadApple} révèle que 584 composants tiers analysés présentent des vulnérabilités associées à 429 CVE distinctes.
+
+\textbf{Mise à jour malveillante :} Les mécanismes de mise à jour Over-The-Air (OTA) non sécurisés permettent l'injection de code malveillant. Zhang et al. \cite{Zhang2024RobustBlockchain} soulignent l'importance de mécanismes de vérification d'intégrité pour prévenir ces attaques.
+
+\textbf{Infection par propagation :} Les botnets IoT utilisent des techniques de propagation automatisée pour infecter massivement les dispositifs vulnérables. L'analyse de Bleeping Computer \cite{BleepingComputer2024MiraiZeroDay} documente l'évolution des variants Mirai utilisant des exploits zero-day pour cibler les routeurs industriels et dispositifs domotiques.
+
+\subsubsection{Attaques par manipulation du flot de contrôle}
+
+\textbf{Attaques Return-Oriented Programming (ROP) :} Ces attaques exploitent les vulnérabilités de débordement de tampon pour détourner le flot d'exécution. Christou et al. \cite{Christou2024DAEDALUS} démontrent comment les attaques ROP peuvent être déployées à grande échelle sur des botnets IoT, compromettant des milliers de dispositifs simultanément.
+
+\textbf{Attaques par corruption de pile :} La manipulation de la pile d'exécution permet de détourner le contrôle du firmware vers du code malveillant. Ces attaques sont particulièrement efficaces sur les microcontrôleurs ARM Cortex-M utilisés dans de nombreux dispositifs IoT.
+
+\textbf{Attaques par injection de code :} L'injection directe de code malveillant dans l'espace d'exécution du firmware permet un contrôle total du dispositif. Cette technique nécessite généralement l'exploitation de vulnérabilités de validation d'entrée.
+
+\subsection{Classification par niveau d'accès requis}
+
+\subsubsection{Attaques à distance}
+
+\textbf{Exploitation de vulnérabilités réseau :} Ces attaques ne nécessitent aucun accès physique au dispositif et peuvent être automatisées à grande échelle. L'étude de Unit 42 \cite{Unit42_2023MiraiExploits} documente l'exploitation de multiples vulnérabilités IoT par des variants Mirai, incluant CVE-2019-17621 (D-Link DIR-859 RCE).
+
+\textbf{Attaques par interface de gestion :} Les interfaces web et API de gestion des dispositifs IoT présentent souvent des vulnérabilités d'authentification et d'autorisation exploitables à distance.
+
+\subsubsection{Attaques avec accès physique}
+
+\textbf{Attaques par canaux cachés :} Les attaques par analyse de la consommation énergétique, des émissions électromagnétiques, ou des temps d'exécution permettent d'extraire des informations sensibles. L'étude de JARVIS \cite{JARVIS2024SideChannel} présente un framework open-source pour l'analyse des vulnérabilités par canaux cachés sur des plateformes FPGA IoT.
+
+\textbf{Attaques par injection de fautes :} L'injection de fautes par manipulation de l'alimentation, de l'horloge, ou par laser permet de corrompre l'exécution du firmware. Les recherches de Kim et al. \cite{Kim2024LaserFault} démontrent la vulnérabilité des registres TMR (Triple Modular Redundant) aux attaques par injection laser.
+
+\textbf{Attaques par sondage matériel :} L'accès direct aux bus de données, interfaces JTAG, ou ports série permet l'extraction ou la modification du firmware. Ces attaques nécessitent des compétences techniques avancées mais offrent un contrôle total du dispositif.
+
+\section{Analyse des vecteurs d'attaque spécifiques}
+
+\subsection{Exploitation des vulnérabilités cryptographiques}
+
+\subsubsection{Attaques sur les implémentations post-quantiques}
+
+La transition vers la cryptographie post-quantique introduit de nouvelles vulnérabilités. L'étude de Chen et al. \cite{Chen2024CarryFault} présente une attaque par propagation de retenue sur les implémentations masquées de Kyber, permettant la récupération de clés secrètes malgré les contre-mesures de masquage.
+
+\subsubsection{Attaques par analyse de fuites}
+
+Les implémentations cryptographiques sur microcontrôleurs sont vulnérables aux attaques par analyse de fuites d'information. L'évaluation complète de CRYSTALS-Kyber par Singh et al. \cite{Singh2024KyberLeakage} révèle des vulnérabilités significatives dans les implémentations ARM Cortex-M4, même avec des contre-mesures de masquage.
+
+\subsection{Exploitation des mécanismes de mise à jour}
+
+\subsubsection{Attaques par compromission des serveurs de mise à jour}
+
+La compromission des serveurs de distribution de firmware permet l'injection de code malveillant dans les mises à jour légitimes. Cette attaque affecte potentiellement tous les dispositifs d'un fabricant simultanément.
+
+\subsubsection{Attaques par réplication de signatures}
+
+L'absence de mécanismes de fraîcheur dans les signatures de firmware permet la réplication d'anciennes signatures valides pour installer des versions vulnérables. Cette technique, appelée "rollback attack", compromet la sécurité même avec des mécanismes de signature robustes.
+
+\subsection{Exploitation des composants matériels}
+
+\subsubsection{Attaques sur les éléments sécurisés}
+
+Malgré leur résistance théorique, les éléments sécurisés peuvent être vulnérables à des attaques sophistiquées. Les recherches sur l'injection de fautes par laser démontrent la possibilité de corrompre des calculs cryptographiques dans des environnements supposés sécurisés.
+
+\subsubsection{Attaques par manipulation de l'environnement d'exécution}
+
+La manipulation des conditions environnementales (température, tension, fréquence) peut induire des comportements erratiques dans les microcontrôleurs, permettant l'exploitation de vulnérabilités temporaires.
+
+\section{Modèle de menaces pour les dispositifs IoT grand public}
+
+\subsection{Acteurs de menace}
+
+\subsubsection{Cybercriminels organisés}
+
+Les groupes de cybercriminels organisés représentent la menace principale pour les dispositifs IoT grand public. Motivés par le profit, ils développent des botnets massifs pour des attaques DDoS, du minage de cryptomonnaies, ou la revente d'accès.
+
+\textbf{Capacités :} Ressources financières importantes, expertise technique avancée, infrastructure de commande et contrôle distribuée.
+
+\textbf{Motivations :} Profit financier, perturbation de services, espionnage industriel.
+
+\textbf{Tactiques :} Exploitation automatisée de vulnérabilités, développement de malwares sophistiqués, compromission de la chaîne d'approvisionnement.
+
+\subsubsection{Acteurs étatiques}
+
+Les agences gouvernementales et services de renseignement utilisent les vulnérabilités IoT pour des opérations de surveillance et d'espionnage.
+
+\textbf{Capacités :} Ressources illimitées, accès à des exploits zero-day, coopération avec les fabricants.
+
+\textbf{Motivations :} Surveillance de masse, espionnage industriel, préparation de conflits cybernétiques.
+
+\textbf{Tactiques :} Implants persistants, exploitation de backdoors, manipulation de firmware lors de la fabrication.
+
+\subsubsection{Hacktivistes}
+
+Les groupes hacktivistes ciblent les dispositifs IoT pour des actions de protestation ou de sensibilisation.
+
+\textbf{Capacités :} Compétences techniques variables, motivation idéologique forte, coordination internationale.
+
+\textbf{Motivations :} Protestation politique, sensibilisation aux problèmes de sécurité, perturbation symbolique.
+
+\textbf{Tactiques :} Attaques de déni de service, défacement de dispositifs, publication de vulnérabilités.
+
+\subsection{Actifs critiques}
+
+\subsubsection{Firmware et code d'application}
+
+Le firmware constitue l'actif le plus critique des dispositifs IoT, car sa compromission permet un contrôle total du dispositif.
+
+\textbf{Vulnérabilités :} Code non signé, mécanismes de vérification d'intégrité absents, vulnérabilités de programmation.
+
+\textbf{Impact de la compromission :} Contrôle total du dispositif, persistance de l'infection, propagation vers d'autres dispositifs.
+
+\subsubsection{Clés cryptographiques}
+
+Les clés cryptographiques permettent l'authentification, le chiffrement, et la signature. Leur compromission compromet l'ensemble des mécanismes de sécurité.
+
+\textbf{Vulnérabilités :} Stockage non sécurisé, génération faible, exposition par canaux cachés.
+
+\textbf{Impact de la compromission :} Usurpation d'identité, déchiffrement de communications, fabrication de signatures valides.
+
+\subsubsection{Données utilisateur}
+
+Les dispositifs IoT collectent et stockent des données personnelles sensibles (habitudes, localisation, préférences).
+
+\textbf{Vulnérabilités :} Chiffrement faible ou absent, transmission non sécurisée, stockage local non protégé.
+
+\textbf{Impact de la compromission :} Violation de la vie privée, usurpation d'identité, chantage.
+
+\subsection{Vecteurs d'attaque prioritaires}
+
+L'analyse des incidents de sécurité récents permet d'identifier les vecteurs d'attaque les plus fréquemment exploités :
+
+\begin{enumerate}
+    \item \textbf{Services réseau avec authentification par défaut} (78\% des compromissions)
+    \item \textbf{Vulnérabilités de composants tiers} (67\% des firmwares affectés)
+    \item \textbf{Mécanismes de mise à jour non sécurisés} (45\% des dispositifs vulnérables)
+    \item \textbf{Interfaces de gestion web vulnérables} (34\% des dispositifs exposés)
+    \item \textbf{Protocoles de communication non chiffrés} (23\% du trafic IoT)
+\end{enumerate}
+
+\section{Évaluation des risques}
+
+\subsection{Méthodologie d'évaluation}
+
+L'évaluation des risques utilise une approche quantitative basée sur la probabilité d'occurrence et l'impact potentiel des attaques identifiées.
+
+\textbf{Probabilité d'occurrence :} Évaluée sur une échelle de 1 à 5 basée sur :
+\begin{itemize}
+    \item Disponibilité d'exploits publics
+    \item Complexité technique de l'attaque
+    \item Motivation des attaquants
+    \item Exposition des dispositifs cibles
+\end{itemize}
+
+\textbf{Impact potentiel :} Évalué sur une échelle de 1 à 5 basée sur :
+\begin{itemize}
+    \item Étendue de la compromission
+    \item Durée de persistance
+    \item Capacité de propagation
+    \item Dommages potentiels
+\end{itemize}
+
+\subsection{Matrice des risques}
+
+\begin{table}[h]
+\centering
+\caption{Matrice d'évaluation des risques de sécurité IoT}
+\label{tab:risk-matrix}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Type d'attaque} & \textbf{Probabilité} & \textbf{Impact} & \textbf{Risque} \\
+\hline
+Exploitation de services par défaut & 5 & 4 & Critique \\
+Injection de malware par OTA & 4 & 5 & Critique \\
+Attaques ROP automatisées & 3 & 4 & Élevé \\
+Compromission de composants tiers & 4 & 3 & Élevé \\
+Attaques par canaux cachés & 2 & 4 & Moyen \\
+Injection de fautes physiques & 1 & 5 & Moyen \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Priorités de sécurisation}
+
+L'analyse des risques révèle trois priorités de sécurisation :
+
+\textbf{Priorité 1 - Authentification et autorisation :} Élimination des identifiants par défaut, implémentation de mécanismes d'authentification robustes, gestion des privilèges d'accès.
+
+\textbf{Priorité 2 - Intégrité du firmware :} Vérification cryptographique des firmwares, mécanismes de mise à jour sécurisée, détection de modifications non autorisées.
+
+\textbf{Priorité 3 - Protection contre les attaques avancées :} Résistance aux attaques par canaux cachés, protection contre l'injection de fautes, mécanismes de détection d'intrusion.
+
+\section{Exigences de sécurité pour SecureIoT-VIF}
+
+\subsection{Exigences fonctionnelles}
+
+L'analyse des menaces identifie plusieurs exigences fonctionnelles critiques pour SecureIoT-VIF :
+
+\textbf{EF-1 : Vérification d'intégrité temps réel}
+\begin{itemize}
+    \item Vérification continue de l'intégrité du firmware pendant l'exécution
+    \item Détection des modifications non autorisées en moins de 100ms
+    \item Taux de détection > 99,9\% avec taux de faux positifs < 0,1\%
+\end{itemize}
+
+\textbf{EF-2 : Authentification cryptographique}
+\begin{itemize}
+    \item Vérification de l'authenticité du firmware au démarrage
+    \item Support des signatures numériques légères (ECDSA, Ed25519)
+    \item Résistance aux attaques par rejeu et rollback
+\end{itemize}
+
+\textbf{EF-3 : Attestation à distance}
+\begin{itemize}
+    \item Preuve cryptographique de l'intégrité du dispositif
+    \item Support des protocoles d'attestation standardisés
+    \item Minimisation de l'overhead de communication
+\end{itemize}
+
+\textbf{EF-4 : Détection d'anomalies comportementales}
+\begin{itemize}
+    \item Analyse des patterns d'exécution en temps réel
+    \item Détection des comportements anormaux sans signatures
+    \item Adaptation aux profils de comportement normaux
+\end{itemize}
+
+\subsection{Exigences non fonctionnelles}
+
+\textbf{ENF-1 : Performance}
+\begin{itemize}
+    \item Overhead computationnel < 5\% des ressources disponibles
+    \item Temps de vérification < 50ms pour des firmwares de 1-2 MB
+    \item Consommation énergétique additionnelle < 2\%
+\end{itemize}
+
+\textbf{ENF-2 : Compatibilité}
+\begin{itemize}
+    \item Support des plateformes ARM Cortex-M, RISC-V, x86
+    \item Intégration avec les systèmes d'exploitation embarqués populaires
+    \item Compatibilité avec les éléments sécurisés existants
+\end{itemize}
+
+\textbf{ENF-3 : Évolutivité}
+\begin{itemize}
+    \item Capacité d'adaptation aux nouvelles menaces
+    \item Support des algorithmes cryptographiques post-quantiques
+    \item Architecture modulaire permettant les extensions
+\end{itemize}
+
+\textbf{ENF-4 : Robustesse}
+\begin{itemize}
+    \item Résistance aux attaques par déni de service
+    \item Récupération automatique après détection d'intrusion
+    \item Protection contre les attaques par canaux cachés
+\end{itemize}
+
+\section{Modèle d'attaquant}
+
+\subsection{Capacités de l'attaquant}
+
+Pour dimensionner les mécanismes de sécurité de SecureIoT-VIF, nous définissons un modèle d'attaquant avec les capacités suivantes :
+
+\textbf{Accès réseau :} L'attaquant peut intercepter, modifier, et rejouer les communications réseau. Il dispose d'exploits pour les vulnérabilités connues et peut développer des exploits zero-day.
+
+\textbf{Accès physique limité :} L'attaquant peut avoir un accès physique temporaire au dispositif, permettant l'analyse par canaux cachés mais pas la modification physique permanente.
+
+\textbf{Ressources computationnelles :} L'attaquant dispose de ressources computationnelles importantes, incluant des fermes de calcul pour le cassage cryptographique et l'analyse de malwares.
+
+\textbf{Connaissances techniques :} L'attaquant maîtrise les techniques d'analyse de firmware, de reverse engineering, et de développement d'exploits.
+
+\subsection{Limitations de l'attaquant}
+
+\textbf{Éléments sécurisés :} L'attaquant ne peut pas extraire les clés stockées dans des éléments sécurisés conformes aux standards (Common Criteria EAL4+).
+
+\textbf{Attaques physiques avancées :} L'attaquant ne dispose pas d'équipements de laboratoire avancés pour l'analyse invasive ou la modification physique des circuits intégrés.
+
+\textbf{Compromission des autorités de certification :} L'attaquant ne peut pas compromettre les autorités de certification racines ou forger des certificats valides.
+
+\section{Conclusion}
+
+Cette analyse approfondie des menaces révèle la complexité et la diversité des attaques ciblant les firmwares IoT. L'évolution constante des techniques d'attaque, combinée à la prolifération des dispositifs IoT vulnérables, crée un environnement de menace particulièrement challenging.
+
+Les principaux enseignements de cette analyse sont :
+
+\begin{enumerate}
+    \item Les attaques par exploitation de services avec authentification par défaut représentent le vecteur d'attaque le plus critique
+    \item La sophistication croissante des malwares IoT nécessite des mécanismes de détection avancés
+    \item L'intégration de composants tiers vulnérables constitue une surface d'attaque majeure
+    \item Les mécanismes de mise à jour non sécurisés offrent des opportunités de compromission persistante
+\end{enumerate}
+
+Ces conclusions guident la conception de SecureIoT-VIF, présentée dans le chapitre suivant, en définissant les exigences de sécurité prioritaires et les contraintes techniques à respecter. L'approche proposée vise à adresser les menaces identifiées tout en respectant les contraintes de performance et de compatibilité des dispositifs IoT grand public.

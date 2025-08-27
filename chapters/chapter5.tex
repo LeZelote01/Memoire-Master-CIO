@@ -713,42 +713,64 @@ Débit réseau (attestation) & 2.3KB/s & - & - \\
 
 \section{Perspectives d'extension multi-plateformes}
 
-\subsection{Arduino avec TPM - Étude théorique}
+\subsection{Extensions vers plateformes alternatives - Étude théorique}
 
-\subsubsection{Analyse de portabilité}
+\subsubsection{Analyse de portabilité vers microcontrôleurs contraints}
 
-L'extension vers Arduino nécessiterait les adaptations suivantes :
+L'extension vers des microcontrôleurs plus contraints nécessiterait les adaptations suivantes :
 
-\textbf{Contraintes identifiées :}
+\textbf{Contraintes identifiées pour Arduino :}
 \begin{itemize}
-    \item Mémoire SRAM limitée (32KB) nécessitant compression agressive
-    \item Absence d'accélérateurs cryptographiques
-    \item Communication I2C avec TPM externe (latence additionnelle)
-    \item Mono-cœur limitant la parallélisation
+    \item Mémoire SRAM limitée (32KB) nécessitant compression agressive des structures de données
+    \item Absence d'accélérateurs cryptographiques intégrés comparés à l'ESP32
+    \item Performance crypto réduite nécessitant optimisations algorithmiques spécifiques
+    \item Mono-cœur limitant les possibilités de parallélisation des opérations de sécurité
 \end{itemize}
 
 \textbf{Stratégies d'adaptation proposées :}
 \begin{itemize}
-    \item Vérification par micro-blocs (256 bytes)
-    \item Algorithmes cryptographiques ultra-légers
-    \item Cache minimal avec LRU intelligent
-    \item Ordonnancement coopératif optimisé
+    \item Vérification par micro-blocs (256 bytes) pour réduire l'empreinte mémoire
+    \item Implémentation d'algorithmes cryptographiques ultra-légers en logiciel pur
+    \item Cache minimal avec algorithme LRU intelligent adapté aux contraintes
+    \item Ordonnancement coopératif optimisé sans accélérateurs matériels
+    \item Utilisation de bibliothèques crypto légères (ChaCha20, Ed25519) optimisées pour ARM Cortex-M
 \end{itemize}
 
-\subsubsection{Estimations de performance}
+\subsubsection{Comparaison ESP32 vs Arduino}
 
 \begin{table}[h]
 \centering
-\caption{Estimations de performance Arduino+TPM}
-\label{tab:arduino-estimates}
-\begin{tabular}{|l|c|}
+\caption{Comparaison des capacités cryptographiques}
+\label{tab:esp32-vs-arduino}
+\begin{tabular}{|l|c|c|}
 \hline
-\textbf{Métrique} & \textbf{Estimation} \\
+\textbf{Caractéristique} & \textbf{ESP32} & \textbf{Arduino Uno R4} \\
 \hline
-Taux de détection estimé & 98.5\% \\
-Overhead CPU estimé & 12-15\% \\
-MTTD estimé & 180-250ms \\
-Mémoire requise & < 2KB SRAM \\
+Accélérateur AES & Matériel & Logiciel uniquement \\
+Accélérateur SHA & Matériel & Logiciel uniquement \\
+Générateur TRNG & Intégré & Pseudo-aléatoire \\
+Élément sécurisé & eFuse + SE & Émulation logicielle \\
+Performance crypto & Élevée & Limitée \\
+Consommation & Optimisée & Standard \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Estimations de performance comparatives}
+
+\begin{table}[h]
+\centering
+\caption{Estimations de performance sur plateformes alternatives}
+\label{tab:alternative-platforms-estimates}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Métrique} & \textbf{ESP32 (Réel)} & \textbf{Arduino (Estimé)} & \textbf{Raspberry Pi (Estimé)} \\
+\hline
+Taux de détection & 99.0\% & 97.5\% & 99.2\% \\
+Overhead CPU & 2.9\% & 12-15\% & 1-2\% \\
+MTTD & 24ms & 180-250ms & 15-20ms \\
+Mémoire requise & 17.3KB & < 8KB & 64MB+ \\
+Accélération crypto & Matérielle & Logicielle & Logicielle optimisée \\
 \hline
 \end{tabular}
 \end{table}

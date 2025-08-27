@@ -33,15 +33,15 @@ Cette recherche a établi une méthodologie rigoureuse pour l'évaluation proof-
 
 \subsection{Contributions méthodologiques}
 
-\subsubsection{Méthodologie d'intégration SE/HSM pour ESP32}
+\subsubsection{Méthodologie d'exploitation ESP32 optimale}
 
-Nous avons développé une méthodologie spécialisée pour l'exploitation optimale des capacités sécurisées de l'ESP32 :
+Nous avons développé une méthodologie spécialisée pour l'exploitation complète des capacités sécurisées de l'ESP32 :
 
-\textbf{Abstraction matérielle ESP32-spécifique :} Création d'une interface unifiée exploitant pleinement les capacités de l'élément sécurisé intégré, des accélérateurs cryptographiques AES/SHA, et du générateur TRNG.
+\textbf{Abstraction matérielle ESP32-spécifique :} Création d'une interface unifiée exploitant pleinement les capacités de l'élément sécurisé intégré, des accélérateurs cryptographiques AES/SHA, et du générateur TRNG matériel, remplaçant efficacement les architectures basées sur composants externes comme l'ATECC608A.
 
-\textbf{Optimisation multi-cœur :} Développement d'algorithmes d'ordonnancement exploitant l'architecture dual-core Xtensa pour minimiser l'impact sur les performances applicatives.
+\textbf{Optimisations multi-cœur :} Développement d'algorithmes d'ordonnancement exploitant l'architecture dual-core Xtensa pour minimiser l'impact sur les performances applicatives, offrant des gains significatifs par rapport aux architectures mono-cœur traditionnelles.
 
-\textbf{Protocoles d'attestation adaptés :} Conception de protocoles d'attestation exploitant les spécificités de la connectivité Wi-Fi ESP32 et optimisés pour les contraintes de bande passante IoT.
+\textbf{Protocoles d'attestation intégrés :} Conception de protocoles d'attestation exploitant nativement les spécificités de la connectivité Wi-Fi ESP32 et optimisés pour les contraintes de bande passante IoT, éliminant le besoin de composants de communication externes.
 
 \subsubsection{Approche de sélection de scénarios représentatifs}
 
@@ -59,7 +59,7 @@ Notre méthodologie de réduction des scénarios de test de 2000 à 200 établit
 
 L'implémentation approfondie de SecureIoT-VIF sur ESP32 représente une contribution technique majeure :
 
-\textbf{Exploitation matérielle optimale :} Utilisation maximale des accélérateurs cryptographiques ESP32, réduisant l'overhead computationnel à 2.9\% contre 15\% en implémentation logicielle pure.
+\textbf{Exploitation matérielle optimale :} Utilisation maximale des accélérateurs cryptographiques ESP32, réduisant l'overhead computationnel à 2.9\% contre 15\% en implémentation logicielle pure, démontrant les avantages de l'intégration matérielle par rapport aux solutions basées sur composants externes.
 
 \textbf{Architecture temps réel :} Implémentation de mécanismes de vérification compatibles avec les contraintes temps réel des applications IoT, avec un temps de vérification médian de 24ms.
 
@@ -69,11 +69,11 @@ L'implémentation approfondie de SecureIoT-VIF sur ESP32 représente une contrib
 
 Les études de portabilité vers Arduino et Raspberry Pi fournissent une roadmap technique claire :
 
-\textbf{Arduino avec TPM :} Conception d'une architecture ultra-légère exploitant la communication I2C avec modules TPM externes, avec des estimations de performance validées par simulation.
+\textbf{Extensions vers plateformes contraintes :} Conception d'architectures ultra-légères pour microcontrôleurs sans accélérateurs cryptographiques intégrés, avec adaptation des algorithmes pour fonctionnement en logiciel pur, et estimations de performance validées par simulation.
 
-\textbf{Raspberry Pi :} Spécification d'une implémentation système complète exploitant les capacités Linux embarqué pour des fonctionnalités avancées de monitoring et d'analyse.
+\textbf{Extensions vers microcontrôleurs contraints :} Spécification d'implémentations adaptées pour plateformes sans accélérateurs intégrés, basées sur des algorithmes crypto légers optimisés et des techniques de compression avancées.
 
-\textbf{Architecture modulaire généralisable :} Conception d'une architecture modulaire facilitant l'adaptation aux spécificités de chaque plateforme tout en maintenant la cohérence fonctionnelle.
+\textbf{Architecture modulaire généralisable :} Conception d'une architecture modulaire facilitant l'adaptation aux spécificités de chaque plateforme tout en maintenant la cohérence fonctionnelle, avec migration prouvée depuis les architectures basées sur composants externes vers les solutions intégrées ESP32.
 
 \subsection{Contributions empiriques}
 
@@ -129,7 +129,7 @@ Cette recherche démontre la faisabilité pratique de mécanismes de sécurité 
 
 \textbf{Vérification continue viable :} Preuve que la vérification d'intégrité continue est possible sur ESP32 avec un impact acceptable sur les performances.
 
-\textbf{Utilisation optimale des SE :} Démonstration de l'utilisation effective des éléments sécurisés embarqués pour des mécanismes de sécurité temps réel.
+\textbf{Utilisation optimale des capacités intégrées :} Démonstration de l'utilisation effective des accélérateurs cryptographiques et de l'élément sécurisé ESP32 pour des mécanismes de sécurité temps réel, surpassant significativement les approches basées sur composants externes.
 
 \textbf{Détection temps réel :} Validation de la détection d'attaques en temps réel (médiane 24ms) compatible avec les exigences des applications IoT critiques.
 

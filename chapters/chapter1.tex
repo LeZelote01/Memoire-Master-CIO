@@ -13,6 +13,18 @@ Les dispositifs \ac{IoT} grand public englobent une vaste gamme d'appareils : ob
 
 Cependant, cette prolifération s'accompagne d'une augmentation alarmante des cyberattaques ciblant spécifiquement les firmwares des dispositifs \ac{IoT}. Les recherches récentes de Nino et al. \cite{Nino2024UnveilingIoT} révèlent que 89\% des firmwares \ac{IoT} analysés présentent des vulnérabilités critiques, dont 67\% sont liées à l'absence de mécanismes de protection de l'intégrité du firmware. Les attaques par compromission de firmware permettent aux cybercriminels d'obtenir un contrôle persistant et de bas niveau des dispositifs, rendant les détections conventionnelles inefficaces.
 
+\section{Évolution technologique et migration vers ESP32}
+
+\subsection{Transition des composants externes vers l'intégration native}
+
+Cette recherche s'inscrit dans le contexte d'une évolution technologique majeure dans l'écosystème IoT : la transition des architectures basées sur des composants de sécurité externes vers des solutions intégrées nativement dans les microcontrôleurs modernes.
+
+\textbf{Limites des approches basées sur composants externes :} Les solutions traditionnelles utilisant des composants comme l'ATECC608A, bien qu'efficaces, présentent plusieurs inconvénients : coût additionnel, complexité d'intégration, consommation énergétique supplémentaire, et vulnérabilités liées aux interfaces de communication (I2C, SPI).
+
+\textbf{Avantages de l'intégration ESP32 :} L'ESP32 intègre nativement des capacités cryptographiques avancées : accélérateurs AES/SHA matériels, élément sécurisé avec stockage de clés, générateur de nombres aléatoires matériel (TRNG), et mécanismes de secure boot. Cette intégration offre des performances supérieures, une sécurité renforcée, et une simplicité de déploiement accrue.
+
+\textbf{Impact de la migration :} SecureIoT-VIF tire parti de cette évolution en exploitant pleinement les capacités intégrées ESP32, démontrant comment les nouvelles générations de microcontrôleurs permettent d'implémenter des mécanismes de sécurité sophistiqués sans composants externes additionnels.
+
 \section{Problématique de recherche}
 
 \subsection{Vulnérabilités des firmwares IoT}
@@ -33,13 +45,13 @@ Les approches actuelles de sécurisation des firmwares IoT présentent plusieurs
 
 \textbf{Absence de vérification temps réel :} La plupart des solutions existantes effectuent la vérification d'intégrité uniquement au démarrage du dispositif, laissant le firmware vulnérable aux attaques d'exécution (runtime attacks). Cette limitation est particulièrement critique pour les dispositifs IoT fonctionnant en continu.
 
-\textbf{Sous-utilisation des capacités matérielles :} Les éléments sécurisés (\ac{SE}) et les modules de sécurité matérielle (\ac{HSM}) embarqués dans de nombreux dispositifs IoT modernes restent largement sous-exploités. Ces composants offrent pourtant des capacités de sécurité avancées : génération de clés cryptographiques, calculs cryptographiques accélérés, stockage sécurisé, et résistance aux attaques physiques.
+\textbf{Sous-utilisation des capacités matérielles :} Les capacités cryptographiques intégrées (\ac{SE}) et les modules de sécurité matérielle (\ac{HSM}) embarqués dans de nombreux dispositifs IoT modernes, notamment l'ESP32 avec ses accélérateurs cryptographiques intégrés, restent largement sous-exploités. Ces composants offrent pourtant des capacités de sécurité avancées : génération de clés cryptographiques, calculs cryptographiques accélérés, stockage sécurisé, et résistance aux attaques physiques.
 
 \section{Objectifs de recherche}
 
 \subsection{Objectif principal}
 
-L'objectif principal de cette recherche est de concevoir, développer et valider SecureIoT-VIF (Verification Integrity Framework), un framework léger de vérification d'intégrité basé sur les \ac{SE}/\ac{HSM} embarqués pour la détection et la prévention des attaques par compromission de firmware dans les dispositifs IoT grand public. Cette recherche adopte une approche proof-of-concept centrée sur une validation approfondie du framework sur une plateforme IoT représentative (ESP32), complétée par des études de portabilité théoriques.
+L'objectif principal de cette recherche est de concevoir, développer et valider SecureIoT-VIF (Verification Integrity Framework), un framework léger de vérification d'intégrité exploitant les capacités cryptographiques intégrées de l'ESP32 pour la détection et la prévention des attaques par compromission de firmware dans les dispositifs IoT grand public. Cette approche représente une évolution significative par rapport aux solutions traditionnelles basées sur des composants externes comme l'ATECC608A, en tirant parti des accélérateurs cryptographiques, de l'élément sécurisé intégré et du générateur TRNG de l'ESP32. Cette recherche adopte une approche proof-of-concept centrée sur une validation approfondie du framework sur cette plateforme IoT représentative, complétée par des études de portabilité théoriques.
 
 \subsection{Objectifs spécifiques}
 
@@ -50,11 +62,11 @@ L'objectif principal de cette recherche est de concevoir, développer et valider
     \item Évaluer l'impact des vulnérabilités identifiées sur la sécurité globale des systèmes IoT
 \end{itemize}
 
-\textbf{Objectif 2 : Conception d'une architecture de sécurité hybride}
+\textbf{Objectif 2 : Conception d'une architecture de sécurité exploitant l'ESP32}
 \begin{itemize}
-    \item Développer une architecture de sécurité exploitant les capacités des \ac{SE}/\ac{HSM} embarqués
-    \item Concevoir des mécanismes de vérification d'intégrité adaptés aux contraintes des dispositifs IoT
-    \item Intégrer des protocoles d'attestation à distance légers et efficaces
+    \item Développer une architecture de sécurité exploitant pleinement les capacités cryptographiques intégrées de l'ESP32
+    \item Concevoir des mécanismes de vérification d'intégrité optimisés pour les accélérateurs AES/SHA matériels
+    \item Intégrer des protocoles d'attestation à distance légers tirant parti du générateur TRNG intégré
 \end{itemize}
 
 \textbf{Objectif 3 : Implémentation et optimisation proof-of-concept}
@@ -81,7 +93,8 @@ Ce travail apporte plusieurs contributions significatives au domaine de la sécu
 
 \textbf{Contribution méthodologique :} 
 \begin{itemize}
-    \item Développement d'une méthodologie d'intégration des \ac{SE}/\ac{HSM} embarqués dans les mécanismes de sécurité des firmwares, maximisant l'utilisation des capacités matérielles disponibles
+    \item Développement d'une méthodologie d'exploitation optimale des capacités cryptographiques intégrées ESP32 dans les mécanismes de sécurité des firmwares, remplaçant efficacement les solutions basées sur composants externes
+    \item Migration réussie d'architectures ATECC608A vers ESP32 crypto intégré avec amélioration des performances
     \item Proposition d'une approche d'évaluation proof-of-concept permettant une validation rigoureuse avec des ressources limitées
 \end{itemize}
 

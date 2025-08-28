@@ -149,40 +149,40 @@ Le protocole de démarrage sécurisé révolutionnaire de SecureIoT-VIF établit
 \label{alg:secure-boot-esp32}
 \begin{algorithmic}[1]
 \State \textbf{Initialisation ESP32 native}
-\State $HSM_{ESP32} \leftarrow$ Activer\_HSM\_Intégré()
-\State $K_{root} \leftarrow$ Récupérer\_Clé\_eFuse($HSM_{ESP32}$)
-\State $État \leftarrow$ INIT\_ESP32
+\State $HSM_{ESP32} \leftarrow$ esp32\_crypto\_manager\_init()
+\State $K_{root} \leftarrow$ esp32\_crypto\_get\_device\_id($HSM_{ESP32}$)
+\State $État \leftarrow$ ESP32\_CRYPTO\_STATE\_INITIALIZING
 
 \State \textbf{Vérification du bootloader avec accélération}
-\State $Signature_{BL} \leftarrow$ Lire\_Signature\_Bootloader\_eFuse()
-\State $Hash_{BL} \leftarrow$ Calculer\_Hash\_Bootloader\_SHA\_Accéléré()
-\If{Vérifier\_Signature\_ECDSA\_Accéléré($Hash_{BL}$, $Signature_{BL}$, $K_{root}$)}
-    \State $État \leftarrow$ BOOTLOADER\_VÉRIFIÉ\_ESP32
+\State $Signature_{BL} \leftarrow$ esp32\_crypto\_get\_public\_key(ESP32\_EFUSE\_KEY\_BLOCK\_0)
+\State $Hash_{BL} \leftarrow$ esp32\_crypto\_sha256(bootloader\_data)
+\If{esp32\_crypto\_ecdsa\_verify($Hash_{BL}$, $Signature_{BL}$)}
+    \State $État \leftarrow$ ESP32\_CRYPTO\_STATE\_CONFIGURED
 \Else
-    \State Déclencher\_Alerte\_Sécurité\_HSM()
-    \State \textbf{return} ÉCHEC\_ESP32
+    \State esp32\_crypto\_store\_emergency\_state()
+    \State \textbf{return} ESP32\_CRYPTO\_ERROR\_SECURE\_BOOT
 \EndIf
 
 \State \textbf{Vérification du kernel avec HSM}
-\State $Signature_{Kernel} \leftarrow$ Lire\_Signature\_Kernel\_eFuse()
-\State $Hash_{Kernel} \leftarrow$ Calculer\_Hash\_Kernel\_SHA\_Accéléré()
-\If{Vérifier\_Signature\_ECDSA\_Accéléré($Hash_{Kernel}$, $Signature_{Kernel}$, $K_{root}$)}
-    \State $État \leftarrow$ KERNEL\_VÉRIFIÉ\_ESP32
+\State $Signature_{Kernel} \leftarrow$ esp32\_crypto\_get\_public\_key(ESP32\_EFUSE\_KEY\_BLOCK\_1)
+\State $Hash_{Kernel} \leftarrow$ esp32\_crypto\_sha256(kernel\_data)
+\If{esp32\_crypto\_ecdsa\_verify($Hash_{Kernel}$, $Signature_{Kernel}$)}
+    \State $État \leftarrow$ ESP32\_CRYPTO\_STATE\_SECURE\_BOOT\_ENABLED
 \Else
-    \State Déclencher\_Alerte\_Sécurité\_HSM()
-    \State \textbf{return} ÉCHEC\_ESP32
+    \State esp32\_crypto\_store\_emergency\_state()
+    \State \textbf{return} ESP32\_CRYPTO\_ERROR\_VERIFICATION\_FAILED
 \EndIf
 
 \State \textbf{Vérification du firmware applicatif native}
-\State $Signature_{App} \leftarrow$ Lire\_Signature\_Application\_eFuse()
-\State $Hash_{App} \leftarrow$ Calculer\_Hash\_Application\_SHA\_Accéléré()
-\If{Vérifier\_Signature\_ECDSA\_Accéléré($Hash_{App}$, $Signature_{App}$, $K_{root}$)}
-    \State $État \leftarrow$ FIRMWARE\_VÉRIFIÉ\_ESP32
-    \State Initialiser\_Monitoring\_Continu\_Dual\_Core()
-    \State \textbf{return} SUCCÈS\_ESP32
+\State $Signature_{App} \leftarrow$ esp32\_crypto\_get\_public\_key(ESP32\_EFUSE\_KEY\_BLOCK\_2)
+\State $Hash_{App} \leftarrow$ esp32\_crypto\_sha256(application\_data)
+\If{esp32\_crypto\_ecdsa\_verify($Hash_{App}$, $Signature_{App}$)}
+    \State $État \leftarrow$ ESP32\_CRYPTO\_STATE\_FLASH\_ENCRYPTED
+    \State esp32\_crypto\_health\_check()
+    \State \textbf{return} ESP32\_CRYPTO\_SUCCESS
 \Else
-    \State Déclencher\_Alerte\_Sécurité\_HSM()
-    \State \textbf{return} ÉCHEC\_ESP32
+    \State esp32\_crypto\_store\_emergency\_state()
+    \State \textbf{return} ESP32\_CRYPTO\_ERROR\_VERIFICATION\_FAILED
 \EndIf
 \end{algorithmic}
 \end{algorithm}
@@ -196,25 +196,25 @@ La vérification continue représente une innovation révolutionnaire majeure de
 \label{alg:continuous-verification-esp32}
 \begin{algorithmic}[1]
 \State \textbf{Initialisation ESP32 native}
-\State $Blocs \leftarrow$ Diviser\_Firmware\_En\_Blocs\_Optimisés()
-\State $Hashes\_Référence \leftarrow$ Calculer\_Hashes\_Initiaux\_SHA\_Accéléré($Blocs$)
-\State $Scheduler \leftarrow$ Initialiser\_Ordonnanceur\_Dual\_Core()
+\State $Blocs \leftarrow$ firmware\_partition / FIRMWARE\_CHUNK\_SIZE
+\State $Hashes\_Référence \leftarrow$ esp32\_crypto\_sha256\_array($Blocs$)
+\State $Scheduler \leftarrow$ xTaskCreate\_dual\_core()
 
 \State \textbf{Boucle de vérification accélérée}
-\While{$Dispositif\_ESP32\_Actif$}
-    \State $Bloc\_Actuel \leftarrow$ Scheduler.Sélectionner\_Bloc\_Suivant\_Core1()
-    \State $Hash\_Actuel \leftarrow$ Calculer\_Hash\_SHA\_Accéléré($Bloc\_Actuel$)
-    \State $Hash\_Référence \leftarrow$ Hashes\_Référence\_eFuse[$Bloc\_Actuel$]
+\While{$esp32\_crypto\_health\_check() == ESP32\_CRYPTO\_SUCCESS$}
+    \State $Bloc\_Actuel \leftarrow$ Scheduler.select\_next\_block\_core1()
+    \State $Hash\_Actuel \leftarrow$ esp32\_crypto\_sha256($Bloc\_Actuel$)
+    \State $Hash\_Référence \leftarrow$ esp32\_crypto\_get\_key\_info($Bloc\_Actuel$)
     
     \If{$Hash\_Actuel \neq Hash\_Référence$}
-        \State $Anomalie \leftarrow$ Analyser\_Modification\_HSM($Bloc\_Actuel$)
-        \If{$Anomalie$ == MALVEILLANTE\_ESP32}
-            \State Déclencher\_Réponse\_Incident\_HSM()
-            \State Notifier\_Attestation\_Distante\_Wi\_Fi()
+        \State $Anomalie \leftarrow$ esp32\_crypto\_verify\_integrity()
+        \If{$Anomalie$ == ESP32\_CRYPTO\_ERROR\_VERIFICATION\_FAILED}
+            \State esp32\_crypto\_store\_emergency\_state()
+            \State esp32\_crypto\_perform\_attestation(challenge, size, attestation)
         \EndIf
     \EndIf
     
-    \State Attendre\_Prochaine\_Vérification\_Timer\_Précis()
+    \State vTaskDelayUntil(verification\_interval)
 \EndWhile
 \end{algorithmic}
 \end{algorithm}
@@ -228,28 +228,28 @@ Le protocole d'attestation à distance révolutionnaire permet aux dispositifs E
 \label{alg:remote-attestation-esp32}
 \begin{algorithmic}[1]
 \State \textbf{Réception de la requête d'attestation Wi-Fi}
-\State $Requête \leftarrow$ Recevoir\_Requête\_Attestation\_Wi\_Fi()
-\State $Nonce \leftarrow$ Extraire\_Nonce($Requête$)
-\State $Challenge \leftarrow$ Extraire\_Challenge($Requête$)
+\State $Requête \leftarrow$ wifi\_receive\_attestation\_request()
+\State $Nonce \leftarrow$ extract\_nonce($Requête$)
+\State $Challenge \leftarrow$ extract\_challenge($Requête$)
 
 \State \textbf{Génération de la preuve avec TRNG natif}
-\State $Mesures \leftarrow$ Collecter\_Mesures\_Système\_ESP32()
-\State $Random\_TRNG \leftarrow$ Générer\_Aléa\_TRNG\_Intégré()
-\State $Preuve \leftarrow$ Construire\_Preuve\_HSM($Mesures$, $Nonce$, $Challenge$, $Random\_TRNG$)
-\State $Signature \leftarrow$ Signer\_Preuve\_ECDSA\_Accéléré($Preuve$, $K_{attestation\_eFuse}$)
+\State $Mesures \leftarrow$ esp32\_crypto\_get\_statistics()
+\State $Random\_TRNG \leftarrow$ esp32\_crypto\_generate\_random(32)
+\State $Preuve \leftarrow$ esp32\_crypto\_get\_device\_info() + $Mesures$ + $Nonce$ + $Challenge$
+\State $Signature \leftarrow$ esp32\_crypto\_ecdsa\_sign(ESP32\_EFUSE\_KEY\_BLOCK\_1, $Preuve$)
 
 \State \textbf{Transmission de la réponse Wi-Fi accélérée}
-\State $Réponse \leftarrow$ Construire\_Réponse\_Optimisée($Preuve$, $Signature$)
-\State $Réponse\_Compressée \leftarrow$ Comprimer\_Réponse\_ESP32($Réponse$)
-\State Transmettre\_Réponse\_Wi\_Fi\_TLS\_Accéléré($Réponse\_Compressée$)
+\State $Attestation \leftarrow$ esp32\_crypto\_perform\_attestation($Challenge$, 32, attestation\_data)
+\State $Réponse \leftarrow$ build\_attestation\_response($Attestation$, $Signature$)
+\State wifi\_transmit\_secure\_response($Réponse$)
 
 \State \textbf{Gestion de la vérification avec HSM}
-\State $Résultat \leftarrow$ Attendre\_Résultat\_Vérification\_Wi\_Fi()
-\If{$Résultat$ == ÉCHEC\_ESP32}
-    \State Déclencher\_Procédure\_Récupération\_HSM()
+\State $Résultat \leftarrow$ wifi\_await\_verification\_result()
+\If{$Résultat$ == VERIFICATION\_FAILED}
+    \State esp32\_crypto\_store\_emergency\_state()
 \EndIf
 \end{algorithmic}
-\end{algorithm}
+\end{algorithm>
 
 \section{Mécanismes d'optimisation ESP32 révolutionnaires}
 

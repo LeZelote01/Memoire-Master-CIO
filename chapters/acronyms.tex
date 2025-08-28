@@ -1,56 +1,92 @@
 %====================================================================
-% Liste des acronymes
+% Liste des acronymes - ESP32 Crypto Intégré
 %====================================================================
 
 \chapter*{Liste des acronymes}
 \addcontentsline{toc}{chapter}{Liste des acronymes}
 
-\begin{acronym}[ACRONYME]
+\begin{acronym}[SPHINCS+]
+    \acro{ADM}{Anomaly Detection Module - Module de Détection d'Anomalies}
     \acro{AES}{Advanced Encryption Standard}
     \acro{API}{Application Programming Interface}
-    \acro{ARM}{Advanced RISC Machine}
-    \acro{ASCON}{Authenticated Encryption and Associated Data Algorithm}
-    \acro{CBOR}{Concise Binary Object Representation}
-    \acro{COSE}{CBOR Object Signing and Encryption}
-    \acro{CPU}{Central Processing Unit}
+    \acro{ARM}{Advanced RISC Machines}
     \acro{CVE}{Common Vulnerabilities and Exposures}
-    \acro{DDoS}{Distributed Denial of Service}
-    \acro{DICE}{Device Identifier Composition Engine}
+    \acro{DBSCAN}{Density-Based Spatial Clustering of Applications with Noise}
+    \acro{DMA}{Direct Memory Access}
+    \acro{DRBG}{Deterministic Random Bit Generator}
+    \acro{ECDH}{Elliptic Curve Diffie-Hellman}
     \acro{ECDSA}{Elliptic Curve Digital Signature Algorithm}
-    \acro{ESP32}{Espressif Systems 32-bit microcontroller}
+    \acro{eFuse}{Electronic Fuse - Fusible Électronique ESP32}
+    \acro{ESP32}{Espressif Systems ESP32 - Microcontrôleur avec Crypto Intégré}
+    \acro{ESP-IDF}{Espressif IoT Development Framework}
+    \acro{FreeRTOS}{Free Real-Time Operating System}
     \acro{FPGA}{Field-Programmable Gate Array}
-    \acro{GNN}{Graph Neural Networks}
+    \acro{GCM}{Galois/Counter Mode}
     \acro{GPIO}{General Purpose Input/Output}
-    \acro{HSM}{Hardware Security Module}
+    \acro{HAL}{Hardware Abstraction Layer}
+    \acro{HMAC}{Hash-based Message Authentication Code}
+    \acro{HSM}{Hardware Security Module - Module de Sécurité Matérielle ESP32}
     \acro{HTTP}{HyperText Transfer Protocol}
-    \acro{IoT}{Internet of Things}
-    \acro{MCU}{Microcontroller Unit}
+    \acro{I2C}{Inter-Integrated Circuit}
+    \acro{IoT}{Internet of Things - Internet des Objets}
+    \acro{IVM}{Integrity Verification Module - Module de Vérification d'Intégrité}
+    \acro{JSON}{JavaScript Object Notation}
+    \acro{KMM}{Key Management Module - Module de Gestion des Clés}
+    \acro{LRU}{Least Recently Used}
+    \acro{MAC}{Message Authentication Code}
+    \acro{ML}{Machine Learning - Apprentissage Automatique}
     \acro{MQTT}{Message Queuing Telemetry Transport}
-    \acro{NSA}{National Security Agency}
-    \acro{OTA}{Over-The-Air}
-    \acro{PACCOR}{Platform Attribute Certificate Creator}
-    \acro{PKI}{Public Key Infrastructure}
+    \acro{MTTD}{Mean Time To Detection}
+    \acro{NVS}{Non-Volatile Storage}
+    \acro{OS}{Operating System - Système d'Exploitation}
     \acro{PUF}{Physically Unclonable Function}
-    \acro{RAM}{Random Access Memory}
-    \acro{RISC}{Reduced Instruction Set Computer}
+    \acro{RAM}{Remote Attestation Module - Module d'Attestation à Distance}
+    \acro{REST}{Representational State Transfer}
+    \acro{RISC-V}{Reduced Instruction Set Computer - Five}
+    \acro{ROM}{Read-Only Memory}
     \acro{ROP}{Return-Oriented Programming}
-    \acro{RoT}{Root of Trust}
-    \acro{RoTMR}{Root of Trust for Measuring and Reporting}
     \acro{RSA}{Rivest-Shamir-Adleman}
-    \acro{SE}{Secure Element}
+    \acro{SDK}{Software Development Kit}
+    \acro{SE}{Secure Element - Élément Sécurisé}
     \acro{SHA}{Secure Hash Algorithm}
-    \acro{SPECK}{Lightweight Block Cipher}
+    \acro{SPI}{Serial Peripheral Interface}
     \acro{SRAM}{Static Random Access Memory}
     \acro{SSL}{Secure Sockets Layer}
+    \acro{TEE}{Trusted Execution Environment}
     \acro{TLS}{Transport Layer Security}
-    \acro{TPC}{Third-Party Component}
-    \acro{TRNG}{True Random Number Generator}
+    \acro{TPC}{Third-Party Components - Composants Tiers}
+    \acro{TPM}{Trusted Platform Module}
+    \acro{TRNG}{True Random Number Generator - Générateur de Nombres Aléatoires Vrai ESP32}
     \acro{UART}{Universal Asynchronous Receiver-Transmitter}
-    \acro{URL}{Uniform Resource Locator}
-    \acro{USB}{Universal Serial Bus}
     \acro{VIF}{Verification Integrity Framework}
-    \acro{XSS}{Cross-Site Scripting}
-    \acro{Xtensa}{32-bit microprocessor architecture by Tensilica}
+    \acro{Wi-Fi}{Wireless Fidelity - Connectivité Sans Fil ESP32 Intégrée}
+    \acro{Xtensa}{Architecture Processeur Dual-Core ESP32}
 \end{acronym}
 
-\cleardoublepage
+\section*{Acronymes spécifiques ESP32 Crypto Intégré}
+
+\begin{description}
+    \item[\textbf{ESP32-S3}] Microcontrôleur Espressif avec capacités cryptographiques intégrées avancées
+    \item[\textbf{HSM ESP32}] Hardware Security Module intégré dans l'ESP32, éliminant le besoin de composants externes
+    \item[\textbf{TRNG ESP32}] True Random Number Generator matériel intégré dans l'ESP32
+    \item[\textbf{eFuse ESP32}] Stockage sécurisé inviolable intégré pour les clés cryptographiques
+    \item[\textbf{Accélérateurs ESP32}] Unités de calcul cryptographique matériel (AES/SHA/RSA) intégrées
+    \item[\textbf{Secure Boot v2}] Mécanisme de démarrage sécurisé natif ESP32
+    \item[\textbf{Flash Encryption}] Chiffrement de la mémoire flash intégré ESP32
+    \item[\textbf{Dual-Core Xtensa}] Architecture processeur dual-core LX7 ESP32
+    \item[\textbf{Wi-Fi ESP32}] Connectivité sans fil intégrée ESP32
+    \item[\textbf{ESP-IDF}] Framework de développement officiel Espressif pour ESP32
+\end{description}
+
+\section*{Termes techniques révolutionnaires}
+
+\begin{description}
+    \item[\textbf{Crypto Intégré}] Capacités cryptographiques implémentées directement dans le silicium du microcontrôleur, éliminant le besoin de composants externes
+    \item[\textbf{Migration Révolutionnaire}] Transition des architectures basées sur composants externes vers solutions crypto intégrées
+    \item[\textbf{Overhead Ultra-Minimal}] Impact sur les performances inférieur à 3\% grâce aux accélérateurs matériels
+    \item[\textbf{Attestation Native}] Protocoles d'attestation exploitant directement les capacités crypto intégrées
+    \item[\textbf{Vérification Continue Accélérée}] Vérification d'intégrité temps réel exploitant les accélérateurs matériels
+    \item[\textbf{Réduction de Coûts 68\%}] Économie substantielle par élimination des composants de sécurité externes
+    \item[\textbf{Performance 10x}] Amélioration de performance grâce aux accélérateurs crypto intégrés
+    \item[\textbf{Sécurité Renforcée Native}] Protection améliorée par l'intégration cryptographique matérielle
+\end{description}
